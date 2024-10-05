@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class Connection {
@@ -29,5 +30,16 @@ public class Connection {
         in.close();
         out.close();
         socket.close();
+    }
+
+    public String printConnetionInfo() {
+        InetAddress localAddress = socket.getLocalAddress();
+        int localPort = socket.getLocalPort();
+        InetAddress remoteAddress = socket.getInetAddress();
+        int remotePort = socket.getPort();
+        String printOutput = "connect to " + remoteAddress.getHostAddress() + ":" + remotePort
+                + " from " + localAddress.getHostAddress() + ":" + localPort
+                + "\nChoose the number:\n1. Display device build info";
+        return printOutput;
     }
 }

