@@ -77,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
                 connection.sendFromClient("Bye!");
                 connection.stopConnection();
                 break;
+            case "2":
+                connection.sendFromClient("꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷SHELL STARTED꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷");
+                connection.shellProcess();
+                break;
         }
     }
 }
